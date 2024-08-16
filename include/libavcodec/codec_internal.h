@@ -21,14 +21,14 @@
 
 #include <stdint.h>
 
-#include "libavcodec/codec.h"
 #include "libavutil/attributes.h"
+#include "codec.h"
 
 /**
  * The codec does not modify any global variables in the init function,
  * allowing to call the init function without locking any global mutexes.
  */
-#define FF_CODEC_CAP_INIT_THREADSAFE (1 << 0)
+#define FF_CODEC_CAP_INIT_THREADSAFE        (1 << 0)
 /**
  * The codec allows calling the close function for deallocation even if
  * the init function returned a failure. Without this capability flag, a
@@ -36,43 +36,43 @@
  * init function and does not expect the close function to be called at
  * all.
  */
-#define FF_CODEC_CAP_INIT_CLEANUP (1 << 1)
+#define FF_CODEC_CAP_INIT_CLEANUP           (1 << 1)
 /**
  * Decoders marked with FF_CODEC_CAP_SETS_PKT_DTS want to set
  * AVFrame.pkt_dts manually. If the flag is set, decode.c won't overwrite
  * this field. If it's unset, decode.c tries to guess the pkt_dts field
  * from the input AVPacket.
  */
-#define FF_CODEC_CAP_SETS_PKT_DTS (1 << 2)
+#define FF_CODEC_CAP_SETS_PKT_DTS           (1 << 2)
 /**
  * The decoder extracts and fills its parameters even if the frame is
  * skipped due to the skip_frame setting.
  */
-#define FF_CODEC_CAP_SKIP_FRAME_FILL_PARAM (1 << 3)
+#define FF_CODEC_CAP_SKIP_FRAME_FILL_PARAM  (1 << 3)
 /**
  * The decoder sets the cropping fields in the output frames manually.
  * If this cap is set, the generic code will initialize output frame
  * dimensions to coded rather than display values.
  */
-#define FF_CODEC_CAP_EXPORTS_CROPPING (1 << 4)
+#define FF_CODEC_CAP_EXPORTS_CROPPING       (1 << 4)
 /**
  * Codec initializes slice-based threading with a main function
  */
-#define FF_CODEC_CAP_SLICE_THREAD_HAS_MF (1 << 5)
+#define FF_CODEC_CAP_SLICE_THREAD_HAS_MF    (1 << 5)
 /*
  * The codec supports frame threading and has inter-frame dependencies, so it
  * uses ff_thread_report/await_progress().
  */
-#define FF_CODEC_CAP_ALLOCATE_PROGRESS (1 << 6)
+#define FF_CODEC_CAP_ALLOCATE_PROGRESS      (1 << 6)
 /**
  * Codec handles avctx->thread_count == 0 (auto) internally.
  */
-#define FF_CODEC_CAP_AUTO_THREADS (1 << 7)
+#define FF_CODEC_CAP_AUTO_THREADS           (1 << 7)
 /**
  * Codec handles output frame properties internally instead of letting the
  * internal logic derive them from AVCodecInternal.last_pkt_props.
  */
-#define FF_CODEC_CAP_SETS_FRAME_PROPS (1 << 8)
+#define FF_CODEC_CAP_SETS_FRAME_PROPS       (1 << 8)
 
 /**
  * FFCodec.codec_tags termination value
@@ -118,14 +118,14 @@ typedef struct FFCodec {
     /**
      * Internal codec capabilities FF_CODEC_CAP_*.
      */
-    unsigned caps_internal : 29;
+    unsigned caps_internal:29;
 
     /**
      * This field determines the type of the codec (decoder/encoder)
      * and also the exact callback cb implemented by the codec.
      * cb_type uses enum FFCodecType values.
      */
-    unsigned cb_type : 3;
+    unsigned cb_type:3;
 
     int priv_data_size;
     /**
@@ -176,7 +176,7 @@ typedef struct FFCodec {
          *         negative error code on failure
          */
         int (*decode)(struct AVCodecContext *avctx, struct AVFrame *frame,
-            int *got_frame_ptr, struct AVPacket *avpkt);
+                      int *got_frame_ptr, struct AVPacket *avpkt);
         /**
          * Decode subtitle data to an AVSubtitle.
          * cb is in this state if cb_type is FF_CODEC_CB_TYPE_DECODE_SUB.
@@ -184,7 +184,7 @@ typedef struct FFCodec {
          * Apart from that this is like the decode callback.
          */
         int (*decode_sub)(struct AVCodecContext *avctx, struct AVSubtitle *sub,
-            int *got_frame_ptr, const struct AVPacket *avpkt);
+                          int *got_frame_ptr, const struct AVPacket *avpkt);
         /**
          * Decode API with decoupled packet/frame dataflow.
          * cb is in this state if cb_type is FF_CODEC_CB_TYPE_RECEIVE_FRAME.
@@ -205,13 +205,13 @@ typedef struct FFCodec {
          * @return 0 on success, negative error code on failure
          */
         int (*encode)(struct AVCodecContext *avctx, struct AVPacket *avpkt,
-            const struct AVFrame *frame, int *got_packet_ptr);
+                      const struct AVFrame *frame, int *got_packet_ptr);
         /**
          * Encode subtitles to a raw buffer.
          * cb is in this state if cb_type is FF_CODEC_CB_TYPE_ENCODE_SUB.
          */
         int (*encode_sub)(struct AVCodecContext *avctx, uint8_t *buf,
-            int buf_size, const struct AVSubtitle *sub);
+                          int buf_size, const struct AVSubtitle *sub);
         /**
          * Encode API with decoupled frame/packet dataflow.
          * cb is in this state if cb_type is FF_CODEC_CB_TYPE_RECEIVE_PACKET.
@@ -251,27 +251,28 @@ typedef struct FFCodec {
     const uint32_t *codec_tags;
 } FFCodec;
 
-#define FF_CODEC_DECODE_CB(func)        \
-    .cb_type = FF_CODEC_CB_TYPE_DECODE, \
-    .cb.decode = (func)
-#define FF_CODEC_DECODE_SUB_CB(func)        \
-    .cb_type = FF_CODEC_CB_TYPE_DECODE_SUB, \
-    .cb.decode_sub = (func)
-#define FF_CODEC_RECEIVE_FRAME_CB(func)        \
-    .cb_type = FF_CODEC_CB_TYPE_RECEIVE_FRAME, \
-    .cb.receive_frame = (func)
-#define FF_CODEC_ENCODE_CB(func)        \
-    .cb_type = FF_CODEC_CB_TYPE_ENCODE, \
-    .cb.encode = (func)
-#define FF_CODEC_ENCODE_SUB_CB(func)        \
-    .cb_type = FF_CODEC_CB_TYPE_ENCODE_SUB, \
-    .cb.encode_sub = (func)
-#define FF_CODEC_RECEIVE_PACKET_CB(func)        \
-    .cb_type = FF_CODEC_CB_TYPE_RECEIVE_PACKET, \
+#define FF_CODEC_DECODE_CB(func)                          \
+    .cb_type           = FF_CODEC_CB_TYPE_DECODE,         \
+    .cb.decode         = (func)
+#define FF_CODEC_DECODE_SUB_CB(func)                      \
+    .cb_type           = FF_CODEC_CB_TYPE_DECODE_SUB,     \
+    .cb.decode_sub     = (func)
+#define FF_CODEC_RECEIVE_FRAME_CB(func)                   \
+    .cb_type           = FF_CODEC_CB_TYPE_RECEIVE_FRAME,  \
+    .cb.receive_frame  = (func)
+#define FF_CODEC_ENCODE_CB(func)                          \
+    .cb_type           = FF_CODEC_CB_TYPE_ENCODE,         \
+    .cb.encode         = (func)
+#define FF_CODEC_ENCODE_SUB_CB(func)                      \
+    .cb_type           = FF_CODEC_CB_TYPE_ENCODE_SUB,     \
+    .cb.encode_sub     = (func)
+#define FF_CODEC_RECEIVE_PACKET_CB(func)                  \
+    .cb_type           = FF_CODEC_CB_TYPE_RECEIVE_PACKET, \
     .cb.receive_packet = (func)
 
-static av_always_inline const FFCodec *ffcodec(const AVCodec *codec) {
-    return (const FFCodec *)codec;
+static av_always_inline const FFCodec *ffcodec(const AVCodec *codec)
+{
+    return (const FFCodec*)codec;
 }
 
 #endif /* AVCODEC_CODEC_INTERNAL_H */
