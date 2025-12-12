@@ -40,7 +40,7 @@ execute_process(
 	OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 # Download prebuilt ffmpeg
-set(FFMPEG_ZIP_PATH "${CMAKE_BINARY_DIR}/external/ffmpeg-${FFMPEG_GIT_SHA}.zip")
+set(FFMPEG_ZIP_PATH "${CMAKE_BINARY_DIR}/externals/ffmpeg-${FFMPEG_GIT_SHA}.zip")
 if(NOT EXISTS "${FFMPEG_ZIP_PATH}")
 	message(STATUS "Downloading FFMPEG prebuilts...")
 	file(DOWNLOAD https://github.com/shadps4-emu/ext-ffmpeg-core/releases/download/${FFMPEG_GIT_SHA}/${FFMPEG_PREBUILTS_NAME}
@@ -53,7 +53,7 @@ if(NOT EXISTS "${FFMPEG_ZIP_PATH}")
 	endif()
 endif()
 
-set(FFMPEG_LIB_PATH "${CMAKE_BINARY_DIR}/external/ffmpeg-${FFMPEG_GIT_SHA}/lib")
+set(FFMPEG_LIB_PATH "${CMAKE_BINARY_DIR}/externals/ffmpeg-${FFMPEG_GIT_SHA}/lib")
 if(NOT EXISTS "${FFMPEG_LIB_PATH}")
 	file(MAKE_DIRECTORY "${FFMPEG_LIB_PATH}")
 	execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf "${FFMPEG_ZIP_PATH}"
