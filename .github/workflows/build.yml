@@ -64,14 +64,25 @@ jobs:
           echo VCPKG_ROOT="$HOME/vcpkg" >> $GITHUB_ENV
         if: matrix.os == 'macos-latest'
 
-      - name: Set up build environment (ubuntu-latest)
+      - name: Patch Ubuntu mirrors (ubuntu-latest)
         run: |
-          sudo apt -y install nasm
+          sudo rm -f /etc/apt/apt-mirrors.txt
+          sudo sed -i 's|mirror+file:/etc/apt/apt-mirrors.txt||g' /etc/apt/sources.list
+          sudo sed -i 's|http://azure.|http://|g' /etc/apt/sources.list
+          sudo apt-get update || sudo apt-get update --fix-missing
         if: matrix.os == 'ubuntu-latest'
 
+      - name: Set up build environment (ubuntu-latest)
+        run: |
+          sudo apt-get install -y nasm
+        if: matrix.os == 'ubuntu-latest'
+      
       - name: Set up build environment (arm64 ubuntu-latest)
         run: |
-          sudo apt-get install -qy binutils-aarch64-linux-gnu gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+          sudo apt-get install -y --fix-missing \
+            binutils-aarch64-linux-gnu \
+            gcc-aarch64-linux-gnu \
+            g++-aarch64-linux-gnu
         if: matrix.os == 'ubuntu-latest' && matrix.arch == 'arm64'
 
       - name: Patch vcpkg
