@@ -66,9 +66,14 @@ jobs:
 
       - name: Patch Ubuntu mirrors (ubuntu-latest)
         run: |
-          sudo rm -f /etc/apt/apt-mirrors.txt
-          sudo sed -i 's|mirror+file:/etc/apt/apt-mirrors.txt||g' /etc/apt/sources.list
-          sudo sed -i 's|http://azure.|http://|g' /etc/apt/sources.list
+          sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak
+          sudo tee /etc/apt/sources.list > /dev/null <<EOL
+          deb http://archive.ubuntu.com/ubuntu noble main universe restricted multiverse
+          deb http://archive.ubuntu.com/ubuntu noble-updates main universe restricted multiverse
+          deb http://archive.ubuntu.com/ubuntu noble-backports main universe restricted multiverse
+          deb http://security.ubuntu.com/ubuntu noble-security main universe restricted multiverse
+          EOL
+          sudo apt-get clean
           sudo apt-get update || sudo apt-get update --fix-missing
         if: matrix.os == 'ubuntu-latest'
 
@@ -76,7 +81,7 @@ jobs:
         run: |
           sudo apt-get install -y nasm
         if: matrix.os == 'ubuntu-latest'
-      
+
       - name: Set up build environment (arm64 ubuntu-latest)
         run: |
           sudo apt-get install -y --fix-missing \
