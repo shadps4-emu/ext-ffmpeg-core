@@ -11,13 +11,13 @@ index e536d1a449..0c4a46bf79 100644
 +
 +# Only enable what is used by shadPS4
 +string(APPEND OPTIONS " --disable-everything")
-+string(APPEND OPTIONS " --enable-decoder=aac --enable-decoder=aac_latm --enable-decoder=atrac3 --enable-decoder=atrac3p --enable-decoder=atrac9 --enable-decoder=mp3 --enable-decoder=pcm_s16le --enable-decoder=pcm_s8")
-+string(APPEND OPTIONS " --enable-decoder=mov --enable-decoder=h264 --enable-decoder=mpeg4 --enable-decoder=mpeg2video --enable-decoder=mjpeg --enable-decoder=mjpegb --enable-decoder=hevc")
++string(APPEND OPTIONS " --enable-decoder=aac --enable-decoder=aac_latm --enable-decoder=atrac3 --enable-decoder=atrac3p --enable-decoder=atrac9 --enable-decoder=mp1 --enable-decoder=mp2 --enable-decoder=mp2float --enable-decoder=mp3 --enable-decoder=mp3float --enable-decoder=ac3 --enable-decoder=ac3_fixed --enable-decoder=eac3 --enable-decoder=dca --enable-decoder=flac --enable-decoder=vorbis --enable-decoder=opus --enable-decoder=pcm_s16le --enable-decoder=pcm_s16be --enable-decoder=pcm_s24le --enable-decoder=pcm_s24be --enable-decoder=pcm_s32le --enable-decoder=pcm_s32be --enable-decoder=pcm_f32le --enable-decoder=pcm_f32be --enable-decoder=pcm_s8 --enable-decoder=pcm_u8")
++string(APPEND OPTIONS " --enable-decoder=mov --enable-decoder=h264 --enable-decoder=mpeg4 --enable-decoder=mpeg2video --enable-decoder=mjpeg --enable-decoder=mjpegb --enable-decoder=hevc --enable-decoder=vp8 --enable-decoder=vp9")
 +string(APPEND OPTIONS " --enable-encoder=pcm_s16le")
 +string(APPEND OPTIONS " --enable-encoder=ffv1 --enable-encoder=mpeg4 --enable-encoder=ljpeg --enable-encoder=mjpeg")
 +string(APPEND OPTIONS " --enable-muxer=avi")
-+string(APPEND OPTIONS " --enable-demuxer=h265 --enable-demuxer=h264 --enable-demuxer=m4v --enable-demuxer=mp3 --enable-demuxer=mpegvideo --enable-demuxer=mpegps --enable-demuxer=mjpeg --enable-demuxer=mov --enable-demuxer=avi --enable-demuxer=aac --enable-demuxer=pmp --enable-demuxer=oma --enable-demuxer=pcm_s16le --enable-demuxer=pcm_s8 --enable-demuxer=wav")
-+string(APPEND OPTIONS " --enable-parser=h264 --enable-parser=mpeg4video --enable-parser=mpegaudio --enable-parser=mpegvideo --enable-parser=mjpeg --enable-parser=aac --enable-parser=aac_latm")
++string(APPEND OPTIONS " --enable-demuxer=h265 --enable-demuxer=h264 --enable-demuxer=hevc --enable-demuxer=m4v --enable-demuxer=mp3 --enable-demuxer=mpegvideo --enable-demuxer=mpegps --enable-demuxer=mpegts --enable-demuxer=mpegtsraw --enable-demuxer=mjpeg --enable-demuxer=mov --enable-demuxer=avi --enable-demuxer=aac --enable-demuxer=ac3 --enable-demuxer=eac3 --enable-demuxer=dts --enable-demuxer=dtshd --enable-demuxer=flac --enable-demuxer=ogg --enable-demuxer=pmp --enable-demuxer=oma --enable-demuxer=pcm_s16le --enable-demuxer=pcm_s8 --enable-demuxer=wav")
++string(APPEND OPTIONS " --enable-parser=h264 --enable-parser=hevc --enable-parser=mpeg4video --enable-parser=mpegaudio --enable-parser=mpegvideo --enable-parser=mjpeg --enable-parser=aac --enable-parser=aac_latm --enable-parser=ac3 --enable-parser=dca --enable-parser=flac --enable-parser=vorbis --enable-parser=opus --enable-parser=vp9")
 +string(APPEND OPTIONS " --enable-protocol=file")
 +string(APPEND OPTIONS " --enable-bsf=mjpeg2jpeg")
 +string(APPEND OPTIONS " --enable-indev=dshow")
